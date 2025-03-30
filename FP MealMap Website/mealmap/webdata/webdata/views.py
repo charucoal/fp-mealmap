@@ -543,17 +543,17 @@ def send_out_alerts(request):
     # # immediately queue to send out alerts to customers in the 0-3km band
     # queue_alerts.delay(statements, customers_within_3km_json)
 
-    # # queue alerts to be sent after 60s for customers in 3-5km band
+    # # queue alerts to be sent after 30s for customers in 3-5km band
     # chain(
     #     get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 59s
     #     queue_alerts.s(customers_within_5km_json)  # Task 2: Send alert after fetching latest data
-    # ).apply_async(countdown=2)  # Runs at 60s
+    # ).apply_async(countdown=30)  # Runs at 30s
 
-    # # queue alerts to be sent after 120s for customers in 5-10km band
+    # # queue alerts to be sent after 60s for customers in 5-10km band
     # chain(
     #     get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 119s
     #     queue_alerts.s(customers_within_10km_json)  # Task 2: Send alert after fetching latest data
-    # ).apply_async(countdown=120)  # Runs at 120s
+    # ).apply_async(countdown=60)  # Runs at 60s
 
     ##################### ASYNC COMMENTED OUT FOR NOW, UNCOMMENT WHEN NEEDED #####################
 
