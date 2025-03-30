@@ -27,10 +27,14 @@ SETTING UP THE APPLICATION (ensure directory is set to 'FP MealMap Website/mealm
 - Run '/usr/local/bin/redis-server' in a new terminal (sets up Redis server)
 - Run 'celery -A webdata.simple_task.celery_app worker --loglevel=info' in another new terminal (sets up Celery)
 
+Note: to make use of the SMS, Email, Account Registration and Profile Update functionality, you have to:
+1. Rename .env.example file to .env
+2. Add the relevant API details
+3. Ensure internet access
+
 RUNNING THE APPLICATION (ensure directory is set to 'FP MealMap Website/mealmap/webdata')
 - Run 'python manage.py runserver 127.0.0.1:8080' in another new terminal
 - Access web application via http://127.0.0.1:8080
-- Note: your device should be connected to the Internet when running the application.
 
 ACCESSING API DOCUMENTATION
 - Access via http://127.0.0.1:8080/api/schema/redoc
