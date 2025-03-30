@@ -3,7 +3,7 @@ from django.utils import timezone
 from twilio.rest import Client
 from .send_email import *
 from .helper_functions import haversine
-from ..credentials import TWILIO_AUTH_TOKEN, TWILIO_SID
+from ..credentials import TWILIO_AUTH_TOKEN, TWILIO_SID, PHONE_NUMBER, TWILIO_PHONE_NUMBER
 from ..models import CustomerInfo
 from ..simple_task import *
 import json
@@ -20,9 +20,9 @@ def send_sms(name, phone_number, sms_message):
     # sms sending logic (intentionally commented out)
     print(f"Sending SMS to {name}", timezone.now())
     # WORKING
-    client.messages.create(from_='+19382046981',  # Twilio-provided number
+    client.messages.create(from_=TWILIO_PHONE_NUMBER,  # Twilio-provided number
                            body=message,
-                           to='+6587538208')  # replace with database if numbers are vefified
+                           to=PHONE_NUMBER)  # replace with database if numbers are vefified
 
 # send email to customer
 def send_email(name, email, email_message):
