@@ -1,0 +1,38 @@
+<!-- LOGIN PAGE -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./g_header.html" %}
+    <body class="m-0 p-0 d-flex flex-column min-vh-100">
+        <div class="container-fluid d-flex justify-content-center align-items-start">
+            <div class="row w-100">
+                <div class="col-12 col-md-6 col-lg-4 mx-auto">
+                    <h2 class="text-center mb-4">SIGN IN</h2>
+                    <!-- DISPLAY ERROR OR SUCCESS MESSAGE -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert 
+                                        {% if message.tags == 'error' %}alert-danger{% endif %}
+                                        {% if message.tags == 'success' %}alert-success{% endif %}">
+                                <b>{{ message }}</b>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form class="form-design" method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            {{ form.as_p }}
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Log In</button>
+                        </div>
+                    </form>
+
+                    <!-- Sign-up Link -->
+                    <p class="text-center mt-3">Don't have an account? <a href="{% url 'customer-signup' %}">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+        {% include "./footer.html" %}
+    </body>
+</html>

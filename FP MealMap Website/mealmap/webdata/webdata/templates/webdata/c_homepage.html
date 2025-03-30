@@ -1,0 +1,131 @@
+<!-- LANDING PAGE FOR CUSTOMERS  -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column height: 100vh;">
+    <div class="container my-4">
+        <!-- DISPLAY MAP DIV -->
+        <div>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <div id="map" class="mb-3 w-100" style="height: 300px;"></div>
+            <!-- TOOLTIP FOR MAP USAGE -->
+            <p class="text-end">
+                <span style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-html="true" title="
+                    • Use the '+' and '-' buttons at the top left of the map to zoom in and out.<br><br>
+                    • The green pin represents your registered location. If it is inaccurate, update your address to a more general one (e.g., road name and zip code only).<br><br>
+                    • The orange pins represent businesses with available offers. Click on a pin to view the restaurant name.
+                ">
+                    ⓘ
+                </span>
+                (The red circle demarcates the 3km radius from your location. Ensure your location is accurate.)
+            </p>
+        </div>
+
+        <!-- DISPLAYS TOP SIX NEWEST OFFERS -->
+        <h2>Latest offers for you</h2>
+        <div class="row">
+            {% for offer in offers %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <!-- OFFER CARD -->
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a style="color: #ed5f18;" href="../../customer/view/?business_id={{ offer.business.business_id }}">
+                                {{ offer.business.business_name }}
+                            </a>
+                            {% if offer.business.verified %}
+                            <img src="../../static/images/verified-sign.png" width="18" height="18">
+                            {% endif %}
+                        </h4>
+                        <p class="text-muted"><b>{{ offer.business.address }}</b></p>
+                        <div class="row align-items-center">
+                            <div class="col-12">
+                                <p><strong>Offer:</strong> {{ offer.quantity }} {{ offer.food_item }} {{ offer.units }} for ${{ offer.price_per_unit|floatformat:2 }}</p>
+                                <p><strong>Expiry:</strong> {{ offer.expiry_date }}</p>
+                                <p><strong>Quantity left:</strong> {{ offer.curr_quantity }} Units</p>
+                            </div>
+                        </div>
+                        <p class="mt-3"><i>{{ offer.business.description }}</i></p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <div>No offers around you yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% include "./footer.html" %}
+    <script>
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // get geospatial locations of businesses of top 6 offers
+        var offers = [
+            {% for r in restaurants %}
+                {   
+                    lat: {{ r.lat }},
+                    long: {{ r.long }},
+                    business_name: "{{ r.business_name }}",
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // intialise long and lat of customer
+            var lat = {{ customer_profile.lat }};
+            var lng = {{ customer_profile.long }};
+
+            // initialise map
+            var map = L.map('map').setView([lat, lng], 13);
+
+            // intialise customer location pin
+            var customer_icon = L.icon({
+                iconUrl: '{% static "images/customer-pin.png" %}',  // custom icon image URL
+                iconSize: [100, 100],
+                iconAnchor: [50, 20],                               // anchor point for the icon (bottom center)
+                popupAnchor: [0, 0]                                 // position of the popup relative to the marker
+            });
+            
+            // intialise business location pin
+            var business_icon = L.icon({
+                iconUrl: '{% static "images/business-pin.png" %}',  // custom icon image URL
+                iconSize: [80, 80],                                 
+                iconAnchor: [40, 16],                               // anchor point for the icon (bottom center)
+                popupAnchor: [0, 0]                                 // position of the popup relative to the marker
+            });
+
+            // add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // add marker for the customer
+            L.marker([lat, lng], {icon: customer_icon}).addTo(map)
+                .bindPopup('Your Registered Location')
+                .openPopup();
+
+            // add markers for businesses
+            offers.forEach(function(offer) {
+                L.marker([offer.lat, offer.long], {icon: business_icon}).addTo(map)
+                    .bindPopup(offer.business_name);
+            });
+
+            // add a translucent, red circle to demarcate 3km radius
+            L.circle([lat, lng], {
+                radius: 3000,               // circle radius will be 3km
+                fillColor: "#f02e07",       // red fill
+                weight: 0,                  // border thickness
+                fillOpacity: 0.2            // opacity
+            }).addTo(map);
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        });
+    </script>
+</body>
+</html>

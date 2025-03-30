@@ -1,0 +1,48 @@
+<!-- DISPLAY OPEN RESERVATIONS -->
+{% load my_tags %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container">
+        <!-- PAGE HEADER -->
+        <h2>Open Reservations</h2>
+        <p>View reservations open for collection.</p>
+
+        <!-- OPEN RESERVATION DETAILS TABLE -->
+        <div class="table-responsive text-center">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Reservation ID</th>
+                        <th>Reserved On</th>
+                        <th>Food Item</th>
+                        <th>Quantity</th>
+                        <th>Total Cost</th>
+                        <th>Food Establishment</th>
+                        <th>Address</th>
+                        <th>Collect By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservation_detail %}
+                        <tr>
+                            <td>{{ reservation.res_id }}</td>
+                            <td>{{ reservation.reservation_date_time }}</td>
+                            <td>{{ reservation.item.food_item }}</td>
+                            <td>{{ reservation.quantity }}</td>
+                            <td>$ {{ reservation.quantity|get_cost:reservation.item.price_per_unit }}</td>
+                            <td>{{ reservation.item.business.business_name }}</td>
+                            <td>{{ reservation.item.business.address }}</td>
+                            <td>{{ reservation.collection_date_time }}</td>
+                        </tr>
+                    {% empty %}
+                    <tr><td colspan="8">No open reservations.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+</body>
+</html>

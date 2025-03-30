@@ -1,0 +1,122 @@
+<!-- LOG FOOD ITEMS TO ALERT CUSTOMERS -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./b_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container mt-4">
+        <!-- PAGE HEADER -->
+        <h2>Log Items & Notify Customers</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <!-- CSV UPLOAD FORM -->
+                <div class="card shadow-sm p-4">
+                    <h3>Add via CSV File</h3>
+                    {% load static %}
+                    <!-- DOWNLOAD TEMPLATE CSV FILE -->
+                    <a href="{% static 'template_log.csv' %}" download="template.csv">
+                        Download the template CSV file
+                    </a>
+                    <!-- DISCLAIMER MESSAGES -->
+                    <ul>
+                        <li>Do not change the column names.</li>
+                        <li>Expiry date time should be in the format DD MM YYYY HH:MM:SS.</li>
+                        <li style="color: red;">Only CSV file format allowed.</li>
+                        <li style="color: red;">Row 1 is considered to be the header row.</li>
+                    </ul>
+                    <!-- DISPLAY ERROR MESSAGES (RELATING TO CSV FILE) -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- ACTION BUTTONS -->
+                    <form class="form-design" action="{% url 'business-upload-log-csv' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- UPLOAD BUTTON -->
+                        <input type="file" name="csv_file" accept=".csv">
+                        <!-- REVIEW FOR ERROR BUTTON -->
+                        <button type="submit" class="btn btn-primary mt-3">Review Log for Errors</button>
+                    </form>
+                </div>
+            </div>
+            <!-- MANUAL INPUT FORM -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm p-4">
+                    <h3>Add Manually</h3>
+                    <form class="form-design" action="{% url 'business-upload-log-manual' %}" method="POST">
+                        {% csrf_token %}
+                        <div id="offer-container">
+                            <div class="offer-field">
+                                <label for="food_item">Food Item: </label>
+                                <input class="mb-3" type="text" name="food_item" required placeholder="Spring Roll">
+                    
+                                <label for="quantity">Quantity (of items in 1 set): </label>
+                                <input class="mb-3" type="number" name="quantity" required placeholder="2" min="1">
+        
+                                <label for="units">Unit: </label>
+                                <input class="mb-3" type="text" name="units" required placeholder="e.g. Pcs / Pckt / ml" min="1">
+        
+                                <label for="price_per_unit">Price per Set: </label>
+                                <input class="mb-3" type="number" name="price_per_unit" step="0.01" placeholder="1.50" required min="0.0">
+                    
+                                <label for="total_units">Total Sets: </label>
+                                <input class="mb-3" type="number" name="total_units" placeholder="20" required min="1">
+                    
+                                <label for="expiry_date">Expiry Date (DD/MM/YYYY HH:MM AM/PM): </label>
+                                <input class="mb-3" type="datetime-local" name="expiry_date" id="expiry_date" required>
+                                <ul class="mt-3"><li>Note: expiry date needs to minimally 24 hours from today's date & time.</li></ul>
+                            </div>
+                        </div>
+                        <!-- ADD NEW ITEM BUTTON -->
+                        <button type="button" onclick="addItemField()" class="btn btn-secondary mt-3">+ Add Item</button>
+                        <!-- REVIEW FOR ERROR BUTTON -->
+                        <button type="submit" class="btn btn-primary mt-3">Review Log for Errors</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+    <script>
+        // logic to add new item manually
+        function addItemField() {
+            let container = document.getElementById("offer-container");
+            let templateField = document.querySelector(".offer-field");
+
+            if (!templateField) {
+                alert("No offer field template found!");
+                return;
+            }
+
+            let newField = templateField.cloneNode(true);
+
+            // clear values
+            newField.querySelector("input[name='food_item']").value = "";
+            newField.querySelector("input[name='quantity']").value = "";
+            newField.querySelector("input[name='total_units']").value = "";
+            newField.querySelector("input[name='price_per_unit']").value = "";
+            newField.querySelector("input[name='units']").value = "";
+            newField.querySelector("input[name='expiry_date']").value = "";
+
+            // ensure unique ID
+            newField.id = "offer-field-" + new Date().getTime();
+
+            container.appendChild(newField);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let now = new Date(); // get the current date and time
+            now.setHours(now.getHours() + 24); // add 24 hours to the current date
+
+            // format the date to match the "datetime-local" input format (YYYY-MM-DDTHH:MM)
+            let minDate = now.toISOString().slice(0, 16);
+
+            // set the min attribute of the expiry_date input to the calculated date
+            document.getElementById('expiry_date').setAttribute('min', minDate);
+        });
+    </script>
+</body>
+</html>

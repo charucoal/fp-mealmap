@@ -1,0 +1,81 @@
+<!-- PURCHASE AND RESERVATION HISTORY PAGE -->
+{% extends './c_profilepage.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-3">History</h2>
+    <p class="text-muted">View your past purchases and reservations here.</p>
+
+    <!-- PURCHASE HISTORY -->
+    <h3 class="mt-4">Purchase History</h3>
+    <div class="table-responsive">
+        <!-- TABLE -->
+        <table class="table table-hover align-middle text-center">
+            <thead>
+                <tr>
+                    <th class=" bg-dark text-white">Purchase ID</th>
+                    <th class=" bg-dark text-white">Food Establishment</th>
+                    <th class=" bg-dark text-white">Address</th>
+                    <th class=" bg-dark text-white">Item</th>
+                    <th class=" bg-dark text-white">Quantity</th>
+                    <th class=" bg-dark text-white">Total Cost</th>
+                    <th class=" bg-dark text-white">Collected On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for purchase in purchase_detail %}
+                    <tr>
+                        <td>{{ purchase.purchase_id }}</td>
+                        <td>{{ purchase.item.business.business_name }}</td>
+                        <td>{{ purchase.item.business.address }}</td>
+                        <td><strong>{{ purchase.item.food_item }}</strong></td>
+                        <td>{{ purchase.quantity }}</td>
+                        <td>$ {{ purchase.quantity|get_cost:purchase.item.price_per_unit }}</td>
+                        <td>{{ purchase.date_purchased }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">No purchases yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- RESERVATION HISTORY -->
+    <h3 class="mt-5">Reservation History</h3>
+    <div class="table-responsive">
+        <!-- TABLE -->
+        <table class="table table-hover align-middle text-center">
+            <thead>
+                <tr>
+                    <th class=" bg-dark text-white">Reservation ID</th>
+                    <th class=" bg-dark text-white">Food Establishment</th>
+                    <th class=" bg-dark text-white">Address</th>
+                    <th class=" bg-dark text-white">Item</th>
+                    <th class=" bg-dark text-white">Quantity</th>
+                    <th class=" bg-dark text-white">Total Cost</th>
+                    <th class=" bg-dark text-white">Reserved On</th>
+                    <th class=" bg-dark text-white">Status</th>
+                    <th class=" bg-dark text-white">Collected On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservation_detail %}
+                    <tr>
+                        <td>{{ reservation.res_id }}</td>
+                        <td>{{ reservation.item.business.business_name }}</td>
+                        <td>{{ reservation.item.business.address }}</td>
+                        <td><strong>{{ reservation.item.food_item }}</strong></td>
+                        <td>{{ reservation.quantity }}</td>
+                        <td>$ {{ reservation.quantity|get_cost:reservation.item.price_per_unit }}</td>
+                        <td>{{ reservation.reservation_date_time }}</td>
+                        <td>{{ reservation.res_status|title }}</td>
+                        <td>{% if reservation.res_status == 'collected' %}{{ reservation.collection_date_time }}{% else %}-{% endif %}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="9">No reservations yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

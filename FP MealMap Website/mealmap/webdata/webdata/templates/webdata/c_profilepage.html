@@ -1,0 +1,61 @@
+<!-- DISPLAYS PROFILE SETTINGS FORM -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container my-5">
+        <div class="row">
+            <!-- PROFILE PAGE SIDE BAR -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3">
+                    <h4 class="mb-3">Settings & History</h4>
+                    <!-- PROFILE SETTING LINKS -->
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="{% url 'customer-profile' %}">Edit Profile</a></li>
+                        <li class="list-group-item"><a href="{% url 'customer-set-password' %}">Reset Password</a></li>
+                        <li class="list-group-item"><a href="{% url 'customer-history' %}">Order History</a></li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- MAIN CONTENT BLOCK -->
+            <div class="col-md-8">
+                {% block content %}
+                <!-- PROFILE FORM DIV BLOCK -->
+                <div class="card shadow-sm p-4 mb-4">
+                    <h4 class="mb-3">Edit Profile</h4>
+                    <!-- DISPLAY ERROR OR SUCCESS MESSAGE -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- PROFILE FORM -->
+                    <form class="form-design" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Submit Changes</button>
+                    </form>
+                </div>
+                
+                <!-- DELETE ACCOUNT BLOCK -->
+                <div class="card shadow-sm p-4 bg-light border-danger">
+                    <h4 class="text-danger mb-3">Delete Account</h4>
+                    <p>Deletion of account is irreversible.</p>
+                    <!-- DELETE FORM -->
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="DELETE ACCOUNT" class="btn btn-danger">DELETE ACCOUNT</button>
+                    </form>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+</body>
+</html>

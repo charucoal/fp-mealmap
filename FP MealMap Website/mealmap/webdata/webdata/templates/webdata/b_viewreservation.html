@@ -1,0 +1,89 @@
+<!-- ALL RESERVATION DETAILS PAGE -->
+{% load my_tags %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./b_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container mt-4">
+        <h2>Reservations</h2>
+        <p>
+            View all reservations here.<br>
+            (Hover above <strong>Item ID</strong> to see full details on item.)
+        </p>
+
+        <!-- A TABLE EACH TYPE OF RESERVATION STATUS: OPEN, COLLECTED, EXPIRED -->
+        {% for type in all_res %}
+            <!-- CARD BORDER COLOR BASED ON RESERVATION STATUS -->
+            <div class="card mb-4 
+                {% if type.0 == 'Open Reservations' %}
+                    border-success
+                {% elif type.0 == 'Collected Reservations' %}
+                    border-primary
+                {% elif type.0 == 'Expired Reservations' %}
+                    border-danger
+                {% else %}
+                border-primary
+                {% endif %}
+            ">
+                <div class="card-body">
+                    <!-- CARD TITLE -->
+                    <h3>{{ type.0 }}</h3>
+                    <div class="table-responsive">
+                        <!-- RESERVATION DETAIL TABLE -->
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Reservation ID</th>
+                                    <th>Reserved On</th>
+                                    <th>Item ID</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Reserved By</th>
+                                    <th>Collect By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in type.1 %}
+                                <tr>
+                                    <td>{{ item.res_id }}</td>
+                                    <td>{{ item.reservation_date_time }}</td>
+                                    <td class="position-relative">
+                                        <!-- TOOLTIP: on hover view details about the item reserved -->
+                                        <span class="badge bg-info" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                            data-bs-html="true" 
+                                            title="
+                                                <p class='m-0 p-2'><strong>Item ID:</strong> {{ item.item.item_id }}</p>
+                                                <p class='m-0 p-2'><strong>Offer:</strong> {{ item.item.quantity }} {{ item.item.units }} of {{ item.item.food_item }} for ${{ item.item.price_per_unit|floatformat:2 }}</p>
+                                                <p class='m-0 p-2'><strong>Units Logged:</strong> {{ item.item.total_units }}</p>
+                                                <p class='m-0 p-2'><strong>Units Left:</strong> {{ item.item.curr_quantity }}</p>
+                                                <p class='m-0 p-2'><strong>Status:</strong> {{ item.item.avail_status }}</p>
+                                                <p class='m-0 p-2'><strong>Expiry Date:</strong> {{ item.item.expiry_date }}</p>
+                                                <p class='m-0 p-2'><strong>Last Updated:</strong> {{ item.item.updated_at }}</p>">
+                                            {{ item.item.item_id }}
+                                        </span>
+                                    </td>     
+                                    <td>{{ item.quantity }}</td>
+                                    <td>$ {{ item.quantity|get_cost:item.item.price_per_unit }}</td>
+                                    <td>{{ item.customer.user }}</td>
+                                    <td>{{ item.collection_date_time }}</td>
+                                </tr>
+                                {% empty %}
+                                    <tr><td colspan="7">No reservations yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% include "./footer.html" %}
+    <!-- Bootstrap JS for tooltips -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // initialize tooltips in the page
+        var tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        var tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+</body>
+</html>

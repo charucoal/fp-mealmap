@@ -1,0 +1,87 @@
+/* FONT IMPORTS */
+@import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+
+/* GENERAL STYLING */
+
+html {
+    background-color: #f5f3eb;
+}
+
+body {
+    background-color: #f5f3eb;
+    font-family: "Inconsolata", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+h1 {
+    font-family: "Francois One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ /* INPUT FIELDS OF FORMS STYLING */
+.form-design input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.form-design input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#flag_id_country {
+    display: none;
+}
+
+/* FOOTER STYLING */
+footer {
+    text-align: center;
+}
+
+footer a {
+    color: inherit;       
+    padding: 0 10px;
+}
+
+footer hr {
+    border-top: 3px solid #ccc;
+    margin: 10px 0;
+}
+
+/* LANDING PAGE DETAILS HEADER STYLING */
+#business-header, #customer-header {
+    width: 100%;                  /* Set the width of the container */
+    margin-left: auto;            /* Center the container horizontally */
+    margin-right: auto;           /* Center the container horizontally */
+    background-color: #ed5f18;  /* Set background color for customer header */
+    text-align: center;           /* Center the text inside the container */
+}
+
+#customer-header {
+    background-color:#074f0e;
+}
+
+/* LOGO STYLING */
+.nav-h1 {
+    margin-top: 10px;
+    color: #074f0e;
+}

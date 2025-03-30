@@ -1,0 +1,80 @@
+<!-- PROFILE SETTINGS PAGE -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./b_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container my-5">
+        <div class="row">
+            <!-- PROFILE NAV LINKS -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3">
+                    <h4 class="mb-3">Settings & History</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="{% url 'business-profile' %}">Edit Profile</a></li>
+                        <li class="list-group-item"><a href="{% url 'business-set-password' %}">Reset Password</a></li>
+                        <li class="list-group-item"><a href="{% url 'business-view-log' %}">Food Log History</a></li>
+                        <li class="list-group-item"><a href="{% url 'business-view-purchase' %}">Purchase History</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- PROFILE FORM DIV BLOCK -->
+            <div class="flex-grow-1 p-3">
+                {% block content %}
+                <div>
+                    {% if business_profile.verified %}
+                        <h4 class="mb-3">Your Business is: <u>VERIFIED</u></h4>
+                    {% else %}
+                        <h4 class="mb-3">Your Business is: <u>NOT VERIFIED</u></h4>
+                    {% endif %}
+                    <p>(A verified business ensures the legitimacy of a restaurant, and customers can see its verification status.)</p>
+                    <div class="card shadow-sm p-4 mb-4">
+                        <h4 class="mb-3">Edit Profile</h4>
+                        <!-- DISPLAY ERROR OR SUCCESS MESSAGE -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- DISPLAY FORM -->
+                        <form class="form-design" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div class="mb-3">
+                                <img src="/media/{{ business_profile.business_image }}" class="img-fluid rounded" style="max-width: 220px; height: auto;">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Changes</button>
+                        </form>
+                    </div>
+                    
+                    <!-- DIETARY PREF CHECKLIST FORM -->
+                    <div class="card shadow-sm p-4 mb-4">
+                        <h4 class="mb-3">Dietary Checks</h4>
+                        <p>Tag the dietary preferences your restaurant caters to.</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ dietary_form.as_p }}
+                            <button type="submit" name="action" value="Confirm Dietary Changes" class="btn btn-success">Confirm Dietary Changes</button>
+                        </form>
+                    </div>
+                    
+                    <!-- DELETE ACCOUNT -->
+                    <div class="card shadow-sm p-4 bg-light border-danger">
+                        <h4 class="text-danger mb-3">Delete Account</h4>
+                        <p>Deletion of account is irreversible.</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="DELETE ACCOUNT" class="btn btn-danger">DELETE ACCOUNT</button>
+                        </form>
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+</body>
+</html>

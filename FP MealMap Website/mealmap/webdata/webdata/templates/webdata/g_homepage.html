@@ -1,0 +1,66 @@
+<!-- LANDING PAGE FOR LOGGED OUT USERS -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./g_header.html" %}
+    <body class="m-0 p-0">
+        <!-- BANNER DIV -->
+        <div class="container-fluid py-4">
+            <div class="row align-items-stretch">
+                <!-- IMAGE COLUMN -->
+                <div class="col-lg-6 col-md-12 p-0">
+                    <div class="w-100 h-100">
+                        <img src="{% static 'images/homepage-banner.jpeg' %}" alt="MealMap" class="w-100 h-100" style="object-fit: cover; object-position: center;">
+                    </div>
+                </div>
+        
+                <!-- TEXT COLUMN -->
+                <div class="col-lg-6 col-md-12 bg-black text-white p-4 d-flex flex-column justify-content-center">
+                    <h1 class="text-center mb-4">GOOD FOOD DON'T DESERVE A BAD REP.<br><u>MEALMAP</u> HELPS WITH THAT.</h1>
+                    <p>
+                        MealMap is built to tackle food waste while connecting local communities to affordable, quality meals and food items. 
+                        We help small food businesses minimise surplus and give customers easy access to great food deals nearby.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- INFORMATION DIVS -->
+        <div class="container my-4">
+            <!-- CUSTOMER INFO DIV -->
+            <div class="row">
+                <!-- TITLE TAKES 1/3 OF THE WIDTH -->
+                <div class="col-lg-4 col-md-4 col-12 d-flex align-items-center">
+                    <h1 id="customer-header">FOR CUSTOMERS</h1>
+                </div>
+                <!-- TEXT TAKES 2/3 OF THE WIDTH -->
+                <div class="col-lg-8 col-md-8 col-12">
+                    <p>
+                        Discover discounted or free food offers from nearby restaurants, cafes, and stores with just a click. 
+                        Once a business posts an available food alert, you'll receive a notification if you're within range. 
+                        You can head over, claim the deal, and enjoy a meal that might otherwise go to waste — simple, affordable, 
+                        and impactful.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container my-4">
+            <!-- BUSINESS INFO DIV -->
+            <div class="row">
+                <!-- TITLE TAKES 1/3 OF THE WIDTH -->
+                <div class="col-lg-4 col-md-4 col-12 d-flex align-items-center">
+                    <h1 id="business-header">FOR BUSINESSES</h1>
+                </div>
+                <!-- TEXT TAKES 2/3 OF THE WIDTH -->
+                <div class="col-lg-8 col-md-8 col-12">
+                    <p>
+                        Got surplus food or items near expiry? MealMap helps you quickly notify potential customers in your area. 
+                        Post an alert with your offer, and our system automatically notifies users within increasing distance 
+                        ranges if food remains unclaimed. This helps reduce waste, recover some costs, and bring new customers 
+                        through your doors — all while supporting a greener community.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% include "./footer.html" %}
+    </body>
+</html>

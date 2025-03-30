@@ -1,0 +1,60 @@
+<!-- FOOD LOG HISTORY PAGE -->
+{% extends './b_profilepage.html' %}
+{% block content %}
+<div class="col-md-12">
+    <div class="card p-4 shadow-sm bg-white mb-4">
+        <!-- PAGE HEADER -->
+        <h2>Food Log History</h2>
+        <p>View all food items logged.</p>
+
+        <!-- FOOD LOG TABLE -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Food Item</th>
+                        <th>Quantity</th>
+                        <th>Units</th>
+                        <th>Price</th>
+                        <th>Total Units Logged</th>
+                        <th>Total Units Left</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th>Logged On</th>
+                        <th>Updated On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.item_id }}</td>
+                            <td>{{ item.food_item }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.units }}</td>
+                            <td>${{ item.price_per_unit|floatformat:2 }}</td>
+                            <td>{{ item.total_units }}</td>
+                            <td>{{ item.curr_quantity }}</td>
+                            <td>{{ item.expiry_date }}</td>
+                            <!-- COLOR CODES STATUS OF ITEMS: Available (green), Unavailable (blue), Expired (red) -->
+                            <td>
+                                {% if item.avail_status == 'available' %}
+                                    <span class="badge bg-success">{{ item.avail_status }}</span>
+                                {% elif item.avail_status == 'unavailable' %}
+                                    <span class="badge bg-primary">{{ item.avail_status }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ item.avail_status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.created_at }}</td>
+                            <td>{{ item.updated_at }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="11">No items logged yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

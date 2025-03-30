@@ -1,0 +1,53 @@
+<!-- VIEW RESTAURANT DETAILS -->
+{% load my_tags %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container my-4">
+        <!-- DISPLAY BUSINESS IMAGE -->
+        <div class="position-relative">
+            <img src="/media/{{ business_details.business_image }}" class="w-100 rounded" style="height: 200px; object-fit: cover;">
+        </div>
+    
+        <!-- DISPLAY BUSINESS DETAILS -->
+        <div class="mt-3">
+            <h2 class="fw-bold">
+                {{ business_details.business_name }} 
+                {% if business_details.verified %}
+                    <img src="../../static/images/verified-sign.png" width="20" height="20">
+                {% endif %}
+            </h2>
+            <h5 class="text-muted">{{ business_details.address }}</h5>
+            <p class="mt-2">
+                {{ business_details.description }} <br>
+                <strong>Opening Hours:</strong> {{ business_details.opening_time }} - {{ business_details.closing_time }}
+            </p>
+        </div>
+    
+        <!-- RESERVATION BUTTON -->
+        <a href="../reservation/make/?business_id={{ business_details.business_id }}" target="_blank" class="btn btn-success my-3">Make a Reservation</a>
+    
+        <!-- DISPLAY ALL OFFERS BY RESTAURANT -->
+        <h3 class="mt-4">Offers by this Restaurant</h3>
+        <div class="row g-3">
+            {% for offer in offers %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">{{ offer.food_item }}</h5>
+                        <p class="card-text mb-2">
+                            <strong>Offer:</strong> {{ offer.quantity }} {{ offer.units }} for 
+                            <span class="text-success">${{ offer.price_per_unit|floatformat:2 }}</span>
+                        </p>
+                        <p class="mb-1"><strong>Expiry:</strong> {{ offer.expiry_date }}</p>
+                        <p class="mb-1"><strong>Quantity left:</strong> {{ offer.curr_quantity }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% include "./footer.html" %}
+</body>
+</html>

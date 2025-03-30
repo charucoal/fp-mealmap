@@ -1,0 +1,109 @@
+<!-- LOG A PURCHASE (MANUALLY OR BY RES ID) PAGE -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./b_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container mt-4">
+        <!-- PAGE HEADER -->
+        <h2>Log a Purchase</h2>
+        <div class="row">
+            <!-- LEFT SIDE: RES ID FORM -->
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card shadow-sm p-4">
+                    <h2>via Reservation ID</h2>
+                    <p>Enter purchases made via a customer's reservation.</p>
+                    <!-- DISPLAY ERROR MESSAGES (RELATING TO CSV FILE) -->
+                    {% if messages and error_for == 'res_id' %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- FORM -->
+                    <form class="form-design" method="POST">
+                        {% csrf_token %}
+                        <div id="reservation-container">
+                            <div class="reservation-field mb-3">
+                                    {{ res_id_form.reservationID }}
+                            </div>
+                        </div>
+                        <!-- ACTION BUTTONS -->
+                        <!-- ADD NEW RES ID -->
+                        <button type="button" class="btn btn-secondary mt-4" onclick="addReservationField()">+ Res ID</button>
+                        <!-- SUBMIT BUTTON -->
+                        <button type="submit" class="btn btn-primary mt-4">Confirm Reservation Pick-Up</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: MANUAL ENTRY FORM -->
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card shadow-sm p-4">
+                    <h2>via Manual Entry</h2>
+                    <p>Enter purchases manually by selecting the offer and quantity.</p>
+                    <!-- DISPLAY ERROR MESSAGES (RELATING TO CSV FILE) -->
+                    {% if messages and error_for == 'manual' %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- FORM -->
+                    <form class="form-design" method="POST">
+                        {% csrf_token %}
+                        <div id="offer-container">
+                            {{ manual_form.customerUsername }}
+                            <div class="offer-field mt-4">
+                                <div class="mt-2">{{ manual_form.offer }}</div>
+                                <div class="mt-2">{{ manual_form.quantity }}</div>
+                            </div>
+                        </div>
+                        <!-- ACTION BUTTONS -->
+                        <!-- ADD NEW ITEM -->
+                        <button type="button" class="btn btn-secondary mt-4" onclick="addOfferField()">+ Add Item</button>
+                        <!-- SUBMIT BUTTON -->
+                        <button type="submit" class="btn btn-primary mt-4">Confirm Purchase</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+    <!-- Bootstrap JS (for handling button actions, etc.) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // adds new reservation id field to form
+        function addReservationField() {
+            let container = document.getElementById("reservation-container");
+            let newField = document.createElement("div");
+            newField.classList.add("reservation-field", "mb-3");
+            newField.innerHTML = '{{ res_id_form.reservationID }}';  
+            container.appendChild(newField);
+        }
+
+        // adds new item and quantity fields to form
+        function addOfferField() {
+            let container = document.getElementById("offer-container");
+            let originalOfferField = document.querySelector(".offer-field"); // get an existing offer field
+
+            if (!originalOfferField) {
+                alert("No offer field found!");
+                return;
+            }
+
+            let newField = originalOfferField.cloneNode(true); // clone the existing offer field
+
+            // clear the cloned inputs (optional)
+            newField.querySelector("select").value = "";
+            newField.querySelector("input").value = "";
+
+            // append the cloned field
+            container.appendChild(newField);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!-- REGISTRATION PAGE (BUSINESS AND CUSTOMER) -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./g_header.html" %}
+    <body class="m-0 p-0">
+        <div class="container-fluid d-flex">
+            <div class="row w-100 justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <!-- FORM HEADER -->
+                    {% if account_type == 'Customer' %}
+                        <h2><u>CUSTOMER</u> SIGN UP</h2>
+                        <p>(Sign up as <a href="{% url 'business-signup' %}">Business</a> instead.)</p>
+                    {% else %}
+                        <h2><u>BUSINESS</u> SIGN UP</h2>
+                        <p>(Sign up as <a href="{% url 'customer-signup' %}">Customer</a> instead.)</p>
+                    {% endif %}
+
+                    <!-- SUCCESS MESSAGE IF REGISTRATION IS SUCCESSFUL -->
+                    {% if registered %}
+                        <div class="alert alert-success">
+                            <p>Successfully signed up... Redirecting you to the login page in <span id="countdown">5</span> seconds.</p>
+                        </div>
+                        <script>
+                            // countdown timer logic
+                            let countdownElement = document.getElementById('countdown');
+                            let countdownTime = 5;  // Set the initial countdown time to 10 seconds
+                            
+                            // update countdown and countdown text every second
+                            let countdownInterval = setInterval(function() {
+                                countdownTime--;
+                                countdownElement.textContent = countdownTime;
+
+                                // if countdown reaches 0, redirect to the homepage
+                                if (countdownTime <= 0) {
+                                    clearInterval(countdownInterval);
+                                    window.location.href = "{% url redirect_url %}";
+                                }
+                            }, 1000);  // 1000ms = 1 second
+                        </script>
+
+                    {% else %}
+                    <!-- DISPLAY ERROR OR SUCCESS MESSAGE -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <!-- DISPLAY REGISTRATION FORM BASED ON account_type selected -->
+                    <form class= "form-design" method="POST" action="{% if account_type == 'Customer' %}{% url 'customer-signup' %}{% else %}{% url 'business-signup' %}{% endif %}"
+                    enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- FORM 1: PERSONAL/BUSINESS PARTICULARS -->
+                        <div class="mb-4">
+                            <h2>Profile Information</h2>
+                            {{ profile_form.as_p }}
+                        </div>
+                        <!-- FORM 2: SET USERNAME & PASSWORD -->
+                        <div class="mb-4">
+                            <h2>Create Username & Password</h2>
+                            {{ user_form.as_p }}
+                        </div>
+                        <!-- SUBMIT BUTTON -->
+                        <div class="text-center">
+                            <input type="submit" name="submit" value="Register" class="btn btn-primary mt-3" />
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+                {% include "./footer.html" %}
+                <script>
+                    window.onload = function() {
+                         // remove autofocus from username field
+                        const usernameField = document.getElementById('id_username');
+                        usernameField.removeAttribute('autofocus');
+                        
+                        // and set scroll to the top of the page
+                        window.scrollTo(0, 0);
+                        };
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

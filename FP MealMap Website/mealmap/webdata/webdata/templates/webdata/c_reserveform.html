@@ -1,0 +1,69 @@
+<!-- DISPLAYS RESERVATION FORM -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container my-5">
+        <div class="p-4 rounded shadow bg-white">
+            <h2 c>Placing Reservation at <span style="font-weight: bold; color: #ed5f18;">{{ business.business_name }}</span></h2>
+            <h5 class="text-muted mb-4">📍{{ business.address }}</h5>
+
+            <!-- DISPLAY ERROR OR SUCCESS MESSAGE -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <!-- DISPLAY RESERVATION FORM -->
+            <form id="main-form" method="POST">
+                {% csrf_token %}
+                <div id="forms-container">
+                    <div class="form-container p-3 mb-3 rounded shadow-sm form-design" style="background-color: #faf6f2;">
+                        {{ form.as_p }}
+                        <!-- ADD ANOTHER ITEM TO RESERVATION -->
+                        <button type="button" class="btn btn-outline-success add-form-btn">+ Add another item</button>
+                    </div>
+                </div>
+                
+                <!-- PLACE RESERVATION BUTTON -->
+                <button type="submit" class="btn btn-warning mt-3">Place Reservation</button><br>
+                <h6 class="mt-3">(Note: a maximum of 3 items can be reserved at once.)</h6>
+            </form>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+    <script>
+        // add new form when "+" button is clicked
+        document.addEventListener('DOMContentLoaded', function () {
+            const formsContainer = document.getElementById('forms-container');
+            count_click = 1
+
+            formsContainer.addEventListener('click', function (event) {
+                if (event.target && event.target.classList.contains('add-form-btn') && count_click < 3) {
+                    count_click += 1
+                    event.preventDefault();
+
+                    // get the parent form-container div and clone it
+                    const parentForm = event.target.closest('.form-container');
+                    const newForm = parentForm.cloneNode(true);
+
+                    // clear the values of input fields in the cloned form
+                    newForm.querySelectorAll('input').forEach(input => {
+                        input.value = '';
+                    });
+
+                    // append the new form to the container
+                    formsContainer.appendChild(newForm);
+
+                    // remove the "+" button from cloned forms
+                    newForm.querySelector('.add-form-btn').remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

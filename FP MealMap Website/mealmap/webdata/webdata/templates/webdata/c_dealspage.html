@@ -1,0 +1,102 @@
+<!-- DISPLAY SEARCH PAGE FOR ALL OFFERS -->
+{% load my_tags %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "./c_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container">
+        <h2>View Offers</h2>
+        <p>View all offers available to you here.</p>
+        
+        <!-- SEARCH FORM -->
+        <form class="mb-3" method="GET">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-2 form-group">
+                    <label for="min_distance">Min Distance:</label>
+                    {{ form.min_distance }}
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="max_distance">Max Distance:</label>
+                    {{ form.max_distance }}
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="min_cost">Min Cost:</label>
+                    {{ form.min_cost }}
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="max_cost">Max Cost:</label>
+                    {{ form.max_cost }}
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="item_name">Item Name:</label>
+                    {{ form.item_name }}
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="restaurant_name">Restaurant Name:</label>
+                    {{ form.restaurant_name }}
+                </div>
+                <!-- DIETARY CHECKLIST -->
+                <div class="d-flex overflow-auto mt-3">
+                    <label>Dietary Preferences:</label>
+                    {% for checkbox in form.dietary_preferences %}
+                        <div class="form-check">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label me-3">{{ checkbox.choice_label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- ACTION BUTTONS -->
+            <div class="d-flex justify-content-start mt-3">
+                <!-- FILTER BUTTON -->
+                <button type="submit" class="btn btn-primary me-2">Filter</button>
+                <!-- CLEAR FILTERS BUTTON -->
+                <a href="{% url 'customer-view-offers' %}" class="btn btn-danger">Clear Filters</a>
+            </div>
+        </form>
+        <!-- STATES TOTAL OFFERS CURRENTLY DISPLAYED -->
+        <p>
+            Total Items: {{ offers|length }} (Items are sorted by newest offers first.)<br>
+            Note: Businesses with the <img src="../../static/images/verified-sign.png" width="15" height="15"> symbol have been verified by MealMap.
+        </p>
+        <div class="row">
+            {% for offer in offers %}
+            <div class="col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- BUSINESS INFO -->
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <h4 class="card-title">
+                                    <a style="color: #ed5f18;" href="../../customer/view/?business_id={{ offer.business.business_id }}">
+                                        {{ offer.business.business_name }}
+                                    </a>
+                                    {% if offer.business.verified %}
+                                    <img src="../../static/images/verified-sign.png" width="15" height="15">
+                                    {% endif %}
+                                </h4>
+                                <h6 class="card-subtitle mb-2 text-muted"><b>{{ offer.business.address }}</b></h6>
+                                <p class="card-text"><i>{{ offer.business.description }}</i></p>
+                                <img src="/media/{{ offer.business.business_image }}" style="width: 300px; height: 150px; object-fit: cover;" class="img-fluid rounded" alt="Business Image">
+                            </div>
+            
+                            <!-- OFFER INFO -->
+                            <div class="col-md-4 d-flex align-items-center">
+                                <div>
+                                    <p><strong>Offer:</strong> {{ offer.quantity }} {{ offer.food_item }} {{ offer.units }} for ${{ offer.price_per_unit|floatformat:2 }}</p>
+                                    <p><strong>Expiry:</strong> {{ offer.expiry_date }}</p>
+                                    <p><strong>Quantity left:</strong> {{ offer.curr_quantity }} Units</p>
+                                    <a href="../reservation/make/?business_id={{ offer.business.business_id }}" target="_blank" class="btn btn-success mt-2">Reserve!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+{% include "./footer.html" %}
+</html>

@@ -1,0 +1,62 @@
+<!-- NEWLY LOGGED ITEMS REVIEW PAGE -->
+<!DOCTYPE html>
+<html lang="en">
+{% include "./b_header.html" %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="container py-5">
+        <h2 class="mb-4 text-center">Review Logged Items</h2>
+        <!-- SUCCESS MESSAGE -->
+        <div class="alert alert-success" role="alert">
+            Yay! No errors were found in the items logged.
+        </div>
+
+        <!-- DISCLAIMER MESSAGE FOR ITEMS LOGGED -->
+        <p class="fw-semibold">
+            Review the details of the food items before clicking <span class="text-danger">"Send out Alerts"</span>, as 
+            <u>details cannot be changed once submitted</u>.
+        </p>
+
+        <!-- LOGGED ITEMS TABLE -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Price</th>
+                        <th>Total Units</th>
+                        <th>Expiry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in food_log_upload_data %}
+                    <tr>
+                        <td>{{ item.row }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.quantity_per_unit }}</td>
+                        <td>{{ item.unit }}</td>
+                        <td>${{ item.price_per_unit|floatformat:2 }}</td>
+                        <td>{{ item.total_units }}</td>
+                        <td>{{ item.expiry_date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="d-flex justify-content-between mt-4">
+            <!-- BRINGS BACK TO LOG PAGE -->
+            <a href="{% url 'business-upload-log' %}" class="btn btn-secondary">Go Back</a>
+            <!-- SAVES INFO TO DB AND SENDS OUT ALERTS -->
+            <form action="{% url 'business-review-log' %}" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Send out Alerts!</button>
+            </form>
+        </div>
+    </div>
+    {% include "./footer.html" %}
+</body>
+</html>
