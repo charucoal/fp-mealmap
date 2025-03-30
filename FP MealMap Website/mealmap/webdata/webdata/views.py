@@ -529,31 +529,31 @@ def send_out_alerts(request):
 
     ##################### ASYNC COMMENTED OUT FOR NOW, UNCOMMENT WHEN NEEDED #####################
 
-    # convert to json format for processing in Celery
-    customers_within_3km_json = convert_to_json(customers_within_3km)
-    customers_within_5km_json = convert_to_json(customers_within_5km)
-    customers_within_10km_json = convert_to_json(customers_within_10km)
+    # # convert to json format for processing in Celery
+    # customers_within_3km_json = convert_to_json(customers_within_3km)
+    # customers_within_5km_json = convert_to_json(customers_within_5km)
+    # customers_within_10km_json = convert_to_json(customers_within_10km)
 
-    business = model_to_json(business_profile)
+    # business = model_to_json(business_profile)
 
-    json_data = [model_to_json(FoodLog.objects.get(item_id=item_id)) for item_id in log_data]
+    # json_data = [model_to_json(FoodLog.objects.get(item_id=item_id)) for item_id in log_data]
 
-    statements = create_alert_statement(json_data, business) # create info statement to send out
+    # statements = create_alert_statement(json_data, business) # create info statement to send out
 
-    # immediately queue to send out alerts to customers in the 0-3km band
-    queue_alerts.delay(statements, customers_within_3km_json)
+    # # immediately queue to send out alerts to customers in the 0-3km band
+    # queue_alerts.delay(statements, customers_within_3km_json)
 
-    # queue alerts to be sent after 60s for customers in 3-5km band
-    chain(
-        get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 59s
-        queue_alerts.s(customers_within_5km_json)  # Task 2: Send alert after fetching latest data
-    ).apply_async(countdown=2)  # Runs at 60s
+    # # queue alerts to be sent after 60s for customers in 3-5km band
+    # chain(
+    #     get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 59s
+    #     queue_alerts.s(customers_within_5km_json)  # Task 2: Send alert after fetching latest data
+    # ).apply_async(countdown=2)  # Runs at 60s
 
-    # queue alerts to be sent after 120s for customers in 5-10km band
-    chain(
-        get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 119s
-        queue_alerts.s(customers_within_10km_json)  # Task 2: Send alert after fetching latest data
-    ).apply_async(countdown=120)  # Runs at 120s
+    # # queue alerts to be sent after 120s for customers in 5-10km band
+    # chain(
+    #     get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 119s
+    #     queue_alerts.s(customers_within_10km_json)  # Task 2: Send alert after fetching latest data
+    # ).apply_async(countdown=120)  # Runs at 120s
 
     ##################### ASYNC COMMENTED OUT FOR NOW, UNCOMMENT WHEN NEEDED #####################
 
