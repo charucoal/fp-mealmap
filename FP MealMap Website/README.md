@@ -52,4 +52,4 @@ After logging in as admin:
 
 DEPENDENCIES - Can be viewed in the requirements.txt file
 
-DEMO VIDEO (YouTube): 
+DEMO VIDEO: https://youtu.be/RRGfUFOPqv0
