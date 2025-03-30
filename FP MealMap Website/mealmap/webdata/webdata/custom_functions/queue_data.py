@@ -1,15 +1,15 @@
 from django.core.serializers import serialize
 from django.utils import timezone
 from twilio.rest import Client
-from webdata.credentials import *
 from .send_email import *
 from .helper_functions import haversine
+from ..credentials import TWILIO_AUTH_TOKEN, TWILIO_SID
 from ..models import CustomerInfo
 from ..simple_task import *
 import json
 
 # connect to Twilio to send SMSes
-client = Client(twilio_account_sid, twilio_auth_token)
+client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
 # send SMS to customer
 def send_sms(name, phone_number, sms_message):

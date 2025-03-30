@@ -2,11 +2,11 @@ import math, googlemaps, csv
 from datetime import datetime, timedelta
 from django.contrib import messages
 from django.shortcuts import redirect
-from webdata.credentials import *
+from ..credentials import GOOGLE_MAPS_API_KEY
 from ..models import FoodLog
 
 # connect to Google maps
-gmaps = googlemaps.Client(key=google_key)
+gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
 # converts address to geospatial coordinates (long & lat)
 def geocode_address(address):

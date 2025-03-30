@@ -1,6 +1,7 @@
 # using SendGrid's Python Library (https://github.com/sendgrid/sendgrid-python)
 import sendgrid
 from sendgrid.helpers.mail import Mail
+from ..credentials import SENDGRID_API_KEY
 
 # custom function to send mail via SendGrid 
 def sendGridMail(customer_email, email_subject, statement):
@@ -14,7 +15,7 @@ def sendGridMail(customer_email, email_subject, statement):
     
     # attempt to send email
     try:
-        sg = sendgrid.SendGridAPIClient(api_key='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')
+        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
         response = sg.send(message)
         print(response.status_code)
         print(response.body)

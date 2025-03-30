@@ -547,7 +547,7 @@ def send_out_alerts(request):
     chain(
         get_latest_quantity.s(log_data, business),  # Task 1: Get latest quantity after 59s
         queue_alerts.s(customers_within_5km_json)  # Task 2: Send alert after fetching latest data
-    ).apply_async(countdown=60)  # Runs at 60s
+    ).apply_async(countdown=2)  # Runs at 60s
 
     # queue alerts to be sent after 120s for customers in 5-10km band
     chain(
