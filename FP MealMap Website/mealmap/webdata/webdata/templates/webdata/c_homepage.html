@@ -7,7 +7,6 @@
     <div class="container my-4">
         <!-- DISPLAY MAP DIV -->
         <div>
-            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
             <div id="map" class="mb-3 w-100" style="height: 300px;"></div>
             <!-- TOOLTIP FOR MAP USAGE -->
             <p class="text-end">
@@ -56,6 +55,8 @@
         </div>
     </div>
     {% include "./footer.html" %}
+    <!-- Leaflet JS -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Initialize Bootstrap tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

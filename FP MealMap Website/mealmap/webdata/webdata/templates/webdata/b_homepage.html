@@ -14,7 +14,6 @@
     <div class="container my-4">
         <!-- DISPLAY MAP DIV -->
         <div>
-            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
             <div id="map" class="mb-3 w-100" style="height: 300px;"></div>
             <p class="text-end">(Ensure your location is accurate.)</p>
         </div>
@@ -75,6 +74,7 @@
         </div>
     </div>
     {% include "./footer.html" %}
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // intialise long and lat of customer
